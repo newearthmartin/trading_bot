@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+db.sqlite3
+db.sqlite3-journal
+
+.idea/
+
+secrets.json
+msgs.txt
