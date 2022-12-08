@@ -1,8 +1,6 @@
 from wallet import BTC, USDT, BINANCE_FEE_MULTIPLIER
 
 
-
-
 class OrderSimulator:
     def __init__(self, wallet):
         self.orders = []
@@ -10,7 +8,7 @@ class OrderSimulator:
         self.order_fulfilled_listeners = []
 
     def place(self, order):
-        print(f'placing {order} - {order.type}')
+        print(f'placing {order} - {order.order_type}')
         self.orders.append(order)
 
     def process_trade(self, trade):

@@ -21,6 +21,3 @@ class SecondProcessor:
 
         if self.trades_listener:
             self.trades_listener(self.last_second_trades)
-
-
-
