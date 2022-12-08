@@ -10,12 +10,15 @@ DIGITS = Decimal(10) ** -3
 
 
 class TradingBot:
+    """
+    Trading bot that works by listening to trades aggregated on seconds
+    """
     def __init__(self, wallet, order_simulator):
         self.wallet = wallet
         self.order_simulator = order_simulator
         order_simulator.order_fulfilled_listeners.append(self.order_listener)
 
-    def process_second_trades(self, trades):
+    def process_seconds(self, trades):
         last_price = trades[-1]
         price_decimal = Decimal(last_price).quantize(DIGITS)
         if len(trades) < LAST_N:

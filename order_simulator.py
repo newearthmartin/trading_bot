@@ -2,6 +2,9 @@ from wallet import BTC, USDT, BINANCE_FEE_MULTIPLIER
 
 
 class OrderSimulator:
+    """
+    Simulates orders to test a trading strategy without actually making the trades on Binance
+    """
     def __init__(self, wallet):
         self.orders = []
         self.wallet = wallet

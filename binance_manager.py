@@ -5,6 +5,12 @@ from order_trade import Trade
 
 
 class BinanceManager:
+    """
+    Manages the Binance API and listens to trades. Has 3 types of listeners:
+    - msg_listeners: for listening to raw messages from binance trades
+    - trade_listeners: for Trade objects
+    - second_listeners: for listening to trades grouped by second
+    """
     def __init__(self, trade_listener=None, second_listener=None, msg_listener=None):
         self.socket_manager = None
         self.current_second = None
