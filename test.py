@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from binance_manager import BinanceManager
 from order_simulator import OrderSimulator
 from second_processor import SecondProcessor

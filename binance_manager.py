@@ -1,4 +1,3 @@
-import json
 from django.conf import settings
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
@@ -48,17 +47,3 @@ class BinanceManager:
         if old_second and old_second_trades:
             for listener in self.second_listeners:
                 listener(old_second, old_second_trades)
-
-
-class SaveMsgs:
-    """Msg listener that will dump messages to a file msgs.txt """
-    def __init__(self):
-        self.msg_count = 0
-        self.out_file = open('msgs.txt', 'a')
-
-    def listener(self, msg):
-        self.out_file.write(json.dumps(msg) + '\n')
-        self.out_file.flush()
-        self.msg_count += 1
-        if self.msg_count % 100 == 0:
-            print(f'saved {self.msg_count} msgs')
