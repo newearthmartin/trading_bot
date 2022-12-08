@@ -8,5 +8,5 @@ db.sqlite3-journal
 
 .idea/
 
-secrets.json
+secrets.toml
 msgs.txt

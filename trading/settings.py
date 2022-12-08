@@ -2,18 +2,18 @@ import os
 import json
 from dateutil import tz
 from pathlib import Path
-
-with open('secrets.json') as f:
-    secrets_json = json.loads(f.read())
-
-BINANCE_API_KEY = secrets_json['BINANCE_API_KEY']
-BINANCE_SECRET_KEY = secrets_json['BINANCE_SECRET_KEY']
+from marto_python.secrets import read_secrets, get_secret
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = secrets_json['SECRET_KEY']
+read_secrets(BASE_DIR)
 
 DEBUG = True
+
+SECRET_KEY = get_secret('SECRET_KEY')
+
+BINANCE_API_KEY = get_secret('BINANCE_API_KEY')
+BINANCE_SECRET_KEY = get_secret('BINANCE_SECRET_KEY')
 
 ALLOWED_HOSTS = []
 
