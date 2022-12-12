@@ -4,7 +4,7 @@ class Order:
         self.price = price
         self.qty = qty
         self.fulfilled = False
-        self.order_type = type
+        self.order_type = order_type
 
     def action(self):
         return 'BUY' if self.buy_not_sell else 'SELL'
