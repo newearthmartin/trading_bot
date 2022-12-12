@@ -1,5 +1,6 @@
 from decimal import Decimal
-from wallet import Coin, BINANCE_FEE
+from wallet import Coin
+from order_simulator import BINANCE_FEE
 from order_trade import Order
 from bots.base_bot import BaseBot
 

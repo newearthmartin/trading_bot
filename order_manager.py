@@ -21,3 +21,4 @@ class OrderManagerBase:
         logger.info(f'order fulfilled - {order.action()} @ {order.price_fulfilled} - {self.wallet}')
         for listener in self.order_fulfilled_listeners:
             listener(order)
+

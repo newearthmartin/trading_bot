@@ -1,8 +1,12 @@
 import logging
-from wallet import Coin, BINANCE_FEE_MULTIPLIER
+from decimal import Decimal
+from wallet import Coin
 from order_manager import OrderManagerBase
 
 logger = logging.getLogger(__name__)
+
+BINANCE_FEE = Decimal(0.001)
+BINANCE_FEE_MULTIPLIER = 1 - BINANCE_FEE
 
 
 class OrderSimulator(OrderManagerBase):
@@ -17,13 +21,13 @@ class OrderSimulator(OrderManagerBase):
             fulfilled = False
             if order.buy_not_sell and trade.price <= order.price:
                 if self.wallet.get(Coin.USDT) >= trade_value:
-                    self.wallet.substract(Coin.USDT, trade_value)
+                    self.wallet.subtract(Coin.USDT, trade_value)
                     self.wallet.add(Coin.BTC, order.qty * BINANCE_FEE_MULTIPLIER)
                     fulfilled = True
             elif not order.buy_not_sell and trade.price >= order.price:
                 if self.wallet.get(Coin.BTC) >= order.qty:
                     self.wallet.add(Coin.USDT, trade_value * BINANCE_FEE_MULTIPLIER)
-                    self.wallet.substract(Coin.BTC, order.qty)
+                    self.wallet.subtract(Coin.BTC, order.qty)
                     fulfilled = True
 
             if fulfilled:

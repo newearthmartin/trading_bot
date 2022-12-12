@@ -8,6 +8,7 @@ from marto_python.exceptions import log_exceptions
 
 logger = logging.getLogger(__name__)
 
+
 class BinanceManager:
     """
     Manages the Binance API and listens to trades. Has 3 types of listeners:
