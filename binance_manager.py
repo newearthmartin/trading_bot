@@ -1,9 +1,12 @@
+import logging
 from decimal import Decimal
 from django.conf import settings
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
 from order_trade import Trade
+from marto_python.exceptions import log_exceptions
 
+logger = logging.getLogger(__name__)
 
 class BinanceManager:
     """
@@ -27,6 +30,7 @@ class BinanceManager:
         self.socket_manager.start()
         print('Binance manager started...')
 
+    @log_exceptions(lggr=logger)
     def process_message(self, msg):
         ts = msg['E']
         price = Decimal(msg['p'])

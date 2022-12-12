@@ -15,6 +15,8 @@ SECRET_KEY = get_secret('SECRET_KEY')
 BINANCE_API_KEY = get_secret('BINANCE_API_KEY')
 BINANCE_SECRET_KEY = get_secret('BINANCE_SECRET_KEY')
 
+ADMINS = [('Martin Massera', 'martinmassera@gmail.com')]
+
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -64,6 +66,13 @@ DATABASES = {
     }
 }
 
+DEFAULT_FROM_EMAIL = get_secret('DEFAULT_FROM_EMAIL')
+SERVER_EMAIL = get_secret('DEFAULT_FROM_EMAIL')
+EMAIL_HOST = get_secret('EMAIL_HOST')
+EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -96,11 +105,15 @@ LOGGING = {
             'filters': [],
             'formatter': 'simple_time',
         },
-
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            # 'filters': ['require_debug_false', 'add_account'],
+        },
     },
     'loggers': {
         '': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'INFO',
         },
     },
