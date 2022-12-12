@@ -1,4 +1,4 @@
-from wallet import BTC, USDT, BINANCE_FEE_MULTIPLIER
+from wallet import Coin, BINANCE_FEE_MULTIPLIER
 
 
 class OrderSimulator:
@@ -19,14 +19,14 @@ class OrderSimulator:
             assert(not order.fulfilled)
             trade_value = trade.price * order.qty
             if order.buy_not_sell and trade.price <= order.price:
-                if self.wallet.get(USDT) >= trade_value:
-                    self.wallet.substract(USDT, trade_value)
-                    self.wallet.add(BTC, order.qty * BINANCE_FEE_MULTIPLIER)
+                if self.wallet.get(Coin.USDT) >= trade_value:
+                    self.wallet.substract(Coin.USDT, trade_value)
+                    self.wallet.add(Coin.BTC, order.qty * BINANCE_FEE_MULTIPLIER)
                     order.fulfilled = True
             elif not order.buy_not_sell and trade.price >= order.price:
-                if self.wallet.get(BTC) >= order.qty:
-                    self.wallet.add(USDT, trade_value * BINANCE_FEE_MULTIPLIER)
-                    self.wallet.substract(BTC, order.qty)
+                if self.wallet.get(Coin.BTC) >= order.qty:
+                    self.wallet.add(Coin.USDT, trade_value * BINANCE_FEE_MULTIPLIER)
+                    self.wallet.substract(Coin.BTC, order.qty)
                     order.fulfilled = True
 
             if order.fulfilled:

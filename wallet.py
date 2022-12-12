@@ -1,5 +1,11 @@
-USDT = 'USDT'
-BTC = 'BTC'
+from enum import Enum
+
+
+class Coin(Enum):
+    USDT = 'USDT'
+    BTC = 'BTC'
+
+
 BINANCE_FEE = 0.001
 BINANCE_FEE_MULTIPLIER = 1 - BINANCE_FEE
 
@@ -7,8 +13,8 @@ BINANCE_FEE_MULTIPLIER = 1 - BINANCE_FEE
 class Wallet:
     def __init__(self, usdt=0.0, btc=0.0):
         self.balance = {
-            USDT: usdt,
-            BTC: btc
+            Coin.USDT: usdt,
+            Coin.BTC: btc
         }
 
     def get(self, coin): return self.balance.get(coin, 0.0)
@@ -23,4 +29,4 @@ class Wallet:
         self.add(coin, -value)
 
     def __repr__(self):
-        return f'({self.balance[USDT]} USDT - {self.balance[BTC]} BTC)'
+        return f'({self.balance[Coin.USDT]} USDT - {self.balance[Coin.BTC]} BTC)'
