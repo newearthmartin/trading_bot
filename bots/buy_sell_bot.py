@@ -1,18 +1,38 @@
+import logging
+
+from decimal import Decimal
 from bots.base_bot import BaseBot
+from order_trade import Order
 from wallet import Coin
+
+logger = logging.getLogger(__name__)
 
 
 class BuySellBot(BaseBot):
-    def __init__(self, wallet, order_simulator, buy_at):
-        super().__init__(wallet, order_simulator)
-        self.orders = []
+    def __init__(self, wallet, order_manager, buy_at):
+        super().__init__(wallet, order_manager)
         self.buy_at = buy_at
+        self.sell_at = None
 
     def process_trade(self, trade):
-        if not self.orders:
-            print(trade)
+        if self.order_manager.orders:
             return
-        USDT_balance = self.wallet.get(Coin.USDT)
-        BTC_balance = self.wallet.get(Coin.BTC)
+        wallet = self.order_manager.wallet
+        USDT_balance = wallet.get(Coin.USDT)
+        BTC_balance = wallet.get(Coin.BTC)
 
-        print('PROCESS TRADE', trade, self.wallet.get(Coin.USDT), 'USDT -', self.wallet.get(Coin.BTC), 'BTC')
+        if USDT_balance > 0 and self.buy_at:
+            price = min(self.buy_at, trade.price)
+            qty = USDT_balance / price
+            self.buy_at = None
+            self.sell_at = price * Decimal(1.005)
+            self.order_manager.place(Order(True, price, qty))
+        elif BTC_balance > 0 and self.sell_at:
+            price = max(self.sell_at, trade.price)
+            qty = BTC_balance
+            self.buy_at = price * Decimal(0.995)
+            self.sell_at = None
+            self.order_manager.place(Order(False, price, qty))
+        else:
+            logger.error(f'No order and nothing to do! - '
+                         f'{USDT_balance} USDT - {BTC_balance} BTC - {self.buy_at} - {self.sell_at}')

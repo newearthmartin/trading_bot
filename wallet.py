@@ -1,3 +1,4 @@
+from decimal import Decimal
 from enum import Enum
 
 
@@ -6,7 +7,7 @@ class Coin(Enum):
     BTC = 'BTC'
 
 
-BINANCE_FEE = 0.001
+BINANCE_FEE = Decimal(0.001)
 BINANCE_FEE_MULTIPLIER = 1 - BINANCE_FEE
 
 
