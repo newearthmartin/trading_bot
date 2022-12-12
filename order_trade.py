@@ -10,7 +10,10 @@ class Order:
         return 'BUY' if self.buy_not_sell else 'SELL'
 
     def __repr__(self):
-        return f'({self.action()} {self.qty} @ {self.price})'
+        order_str = f'{self.action()} {self.qty} @ {self.price}'
+        if self.order_type:
+            order_str += f' - {self.order_type}'
+        return f'({order_str})'
 
 
 class Trade:
