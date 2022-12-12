@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.conf import settings
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
@@ -28,8 +29,9 @@ class BinanceManager:
 
     def process_message(self, msg):
         ts = msg['E']
-        price = float(msg['p'])
-        qty = float(msg['q'])
+        price = Decimal(msg['p'])
+        qty = Decimal(msg['q'])
+
         second = ts // 1000
 
         old_second = None

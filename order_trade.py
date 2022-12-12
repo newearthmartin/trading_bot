@@ -20,4 +20,4 @@ class Trade:
         self.ts = ts
 
     def __repr__(self):
-        return str((self.price, self.qty, self.ts))
+        return f'({self.price}, {self.qty}, {self.ts})'

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 MAX_SECONDS = 60 * 60 * 24
 
 
@@ -13,7 +15,7 @@ class SecondAggregator:
         if not trades:
             return
 
-        avg_price = 0.0
+        avg_price = Decimal(0.0)
         for trade in trades:
             avg_price += trade.price
         avg_price /= len(trades)
