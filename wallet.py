@@ -7,10 +7,6 @@ class Coin(Enum):
     BTC = 'BTC'
 
 
-BINANCE_FEE = Decimal(0.001)
-BINANCE_FEE_MULTIPLIER = 1 - BINANCE_FEE
-
-
 class Wallet:
     def __init__(self, usdt=0.0, btc=0.0):
         self.balance = {
@@ -26,8 +22,14 @@ class Wallet:
             self.balance[coin] = 0
         self.balance[coin] += value
 
-    def substract(self, coin, value):
+    def subtract(self, coin, value):
         self.add(coin, -value)
 
     def __repr__(self):
         return f'({self.balance[Coin.USDT]} USDT - {self.balance[Coin.BTC]} BTC)'
+
+    def update_balances(self, binance_manager):
+        for coin in Coin:
+            data = binance_manager.client.get_asset_balance(asset=coin.value)
+            self.set(coin, Decimal(data['free']))
+        print(self.balance)
