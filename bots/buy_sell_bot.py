@@ -25,14 +25,15 @@ class BuySellBot(BaseBot):
             price = min(self.buy_at, trade.price)
             qty = USDT_balance / price
             self.buy_at = None
-            self.sell_at = price * Decimal(1.005)
+            self.sell_at = price * Decimal(1.01)
             self.order_manager.place(Order(True, price, qty))
         elif BTC_balance > 0 and self.sell_at:
             price = max(self.sell_at, trade.price)
             qty = BTC_balance
-            self.buy_at = price * Decimal(0.995)
+            self.buy_at = price * Decimal(0.99)
             self.sell_at = None
             self.order_manager.place(Order(False, price, qty))
         else:
             logger.error(f'No order and nothing to do! - '
-                         f'{USDT_balance} USDT - {BTC_balance} BTC - {self.buy_at} - {self.sell_at}')
+                         f'{USDT_balance} USDT - {BTC_balance} BTC - '
+                         f'{self.buy_at} - {self.sell_at}')

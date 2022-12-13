@@ -22,3 +22,13 @@ class OrderManagerBase:
         for listener in self.order_fulfilled_listeners:
             listener(order)
 
+
+class BinanceOrderManager(OrderManagerBase):
+    def __init__(self, wallet, binance_manager):
+        super().__init__(wallet)
+        self.binance_manager = binance_manager
+
+    def place(self, order):
+        # TODO: place order in binance
+        super().place(order)
+        self.wallet.update_balances(self.binance_manager)
