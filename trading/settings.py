@@ -123,7 +123,7 @@ LOGGING = {
     },
     'loggers': {
         '': {
-            'handlers': ['console', 'logfile', 'mail_admins'],
+            'handlers': ['logfile', 'console', 'mail_admins'],
             'level': 'INFO',
         },
     },
