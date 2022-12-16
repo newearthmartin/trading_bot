@@ -1,12 +1,12 @@
 #!/usr/bin/env python
+
 import django
 django.setup()
 
 import logging
 from decimal import Decimal
-from binance_manager import BinanceManager, place_order, get_order, get_active_orders, BTCUSDT
+from binance_manager import BinanceManager, place_order, get_order, BTCUSDT
 from order_manager import BinanceOrderManager
-from order_simulator import BINANCE_FEE_MULTIPLIER
 from wallet import Wallet, Coin
 from marto_python.strings import to_decimal
 from order_trade import Order
@@ -23,7 +23,6 @@ SELL_ORDER_ID = "sell_order_id"
 binance = BinanceManager()
 order_manager = BinanceOrderManager(binance, Wallet())
 wallet = order_manager.wallet
-wallet.update_balances(binance)
 
 
 def place_buy(price):
