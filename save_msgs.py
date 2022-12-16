@@ -1,5 +1,11 @@
 #!/usr/bin/env python
+import django
+django.setup()
+from django.conf import settings
+
+import os
 import json
+
 from binance_manager import BinanceManager
 
 
@@ -9,7 +15,9 @@ class SaveMsgs:
     """
     def __init__(self):
         self.msg_count = 0
-        self.out_file = open('msgs.txt', 'a')
+        out_path = os.path.join(settings.BASE_DIR, 'msgs.txt')
+        print(f'Writing msgs to {out_path}')
+        self.out_file = open(out_path, 'a')
 
     def listener(self, msg):
         self.out_file.write(json.dumps(msg) + '\n')
