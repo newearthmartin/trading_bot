@@ -29,7 +29,7 @@ class Wallet:
         self.add(coin, -value)
 
     def __repr__(self):
-        return f'({self.balance[Coin.USDT]} USDT - {self.balance[Coin.BTC]} BTC)'
+        return f'({self.balance[Coin.USDT].normalize()} USDT - {self.balance[Coin.BTC].normalize()} BTC)'
 
     def update_balances(self, binance_manager):
         for coin in Coin:

@@ -94,7 +94,10 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {'format': '%(name)s %(levelname)s %(message)s'},
-        'simple_time': {'format': '%(asctime)s %(levelname)s %(name)s - %(message)s'},
+        'simple_time': {
+            'format': '%(asctime)s %(levelname)s %(name)s - %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
     },
     'filters': {
         'require_debug_false': {'()': 'django.utils.log.RequireDebugFalse'},
