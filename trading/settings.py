@@ -105,6 +105,13 @@ LOGGING = {
             'filters': [],
             'formatter': 'simple_time',
         },
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logfile.log'),
+            'formatter': 'simple_time',
+            'delay': True,
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -113,7 +120,7 @@ LOGGING = {
     },
     'loggers': {
         '': {
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console', 'logfile', 'mail_admins'],
             'level': 'INFO',
         },
     },
