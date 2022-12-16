@@ -3,8 +3,10 @@ from decimal import Decimal
 from django.conf import settings
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
-from order_trade import Trade
+from binance.enums import SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, TIME_IN_FORCE_GTC
+from order_trade import Trade, Order
 from marto_python.exceptions import log_exceptions
+from marto_python.strings import to_decimal
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +34,7 @@ class BinanceManager:
         self.socket_manager = BinanceSocketManager(self.client)
         self.socket_manager.start_aggtrade_socket(BTCUSDT, self.process_message)
         self.socket_manager.start()
-        print('Binance manager started...')
+        logger.info('Binance manager started...')
 
     @log_exceptions(lggr=logger)
     def process_message(self, msg):
@@ -67,4 +69,36 @@ class BinanceManager:
 
 def get_active_orders(binance):
     orders = binance.client.get_all_orders(symbol=BTCUSDT, limit=10)
-    return [order for order in orders if order['status'] in ['NEW', 'PARTIALLY_FILLED']]
+    orders = [Order.from_binance(o) for o in orders]
+    orders = [o for o in orders if o.is_active()]
+    return orders
+
+
+def get_order(binance, binance_id=None, client_id=None):
+    kwargs = {'symbol': BTCUSDT}
+    if binance_id:
+        kwargs['orderId'] = binance_id
+    elif client_id:
+        kwargs['origClientOrderId'] = client_id
+    order = binance.client.get_order(**kwargs)
+    return Order.from_binance(order)
+
+
+def place_order(binance, order, test=False):
+    assert(order.client_id is not None)
+    assert(order.binance_id is None)
+    assert(order.status is None)
+
+    price = str(to_decimal(order.price, 2))
+    qty = str(to_decimal(order.qty, 5))
+
+    logger.info(f'placing order {order.client_id} - {order.side} - {qty} @ {price}')
+    create_fn = binance.client.create_order if not test else binance.client.create_test_order
+    create_fn(
+        symbol=BTCUSDT, side=order.side, type=ORDER_TYPE_LIMIT, timeInForce=TIME_IN_FORCE_GTC,
+        newClientOrderId=order.client_id, quantity=qty, price=price)
+
+    logger.info('placed order - searching for order')
+    placed_order = get_order(binance, client_id=order.client_id)
+    logger.info(f'placed order - {placed_order}')
+    return placed_order
