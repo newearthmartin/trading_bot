@@ -1,5 +1,8 @@
+import logging
 from decimal import Decimal
 from enum import Enum
+
+logger = logging.getLogger(__name__)
 
 
 class Coin(Enum):
@@ -32,4 +35,4 @@ class Wallet:
         for coin in Coin:
             data = binance_manager.client.get_asset_balance(asset=coin.value)
             self.set(coin, Decimal(data['free']))
-        print(self.balance)
+        logger.info(f'Updated balances - {self}')
