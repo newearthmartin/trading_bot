@@ -13,9 +13,9 @@ from order_trade import Order
 
 logger = logging.getLogger(__name__)
 
-max_buy = Decimal(17409.70)
+max_buy = None
 min_sell = None
-INCR = 0.005
+INCR = 0.01
 
 
 BUY_ORDER_ID = "buy_order_id"
@@ -23,11 +23,16 @@ SELL_ORDER_ID = "sell_order_id"
 binance = BinanceManager()
 order_manager = BinanceOrderManager(binance, Wallet())
 wallet = order_manager.wallet
+wallet.update_balances(binance)
 
 
 def place_buy(price):
-    usdt_balance = wallet.get(Coin.USDT)
-    new_order = Order(Order.BUY, price, (usdt_balance / price) * BINANCE_FEE_MULTIPLIER, client_id=BUY_ORDER_ID)
+    usdt_balance = to_decimal(wallet.get(Coin.USDT), 2)
+    price = to_decimal(price, 2)
+    qty = to_decimal(usdt_balance / price, 5)
+    while qty * price > usdt_balance:
+        qty -= Decimal('0.00001')
+    new_order = Order(Order.BUY, price, qty, client_id=BUY_ORDER_ID)
     return place_order(binance, new_order)
 
 

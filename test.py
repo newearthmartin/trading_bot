@@ -19,26 +19,6 @@ binance = BinanceManager()
 # wallet = order_manager.wallet
 # wallet.update_balances(binance)
 
-# usdt_balance = wallet.get(Coin.USDT)
-# price = Decimal(17389)
-# order = Order(Order.BUY, price, (usdt_balance / price) * BINANCE_FEE_MULTIPLIER, client_id="buy_order_id")
-# placed_order = place_order(binance, order)
-
-# placed_order = get_order(binance, client_id="buy_order_id")
-#
-# if placed_order.status == 'FILLED':
-#     print('buy order filled - selling')
-#     price = placed_order.price * Decimal(1.001)
-#     btc_balance = wallet.get(Coin.BTC)
-#     order = Order(Order.SELL, price, btc_balance, client_id="sell_order_id")
-#     placed_order = place_order(binance, order)
-
-# orders = get_active_orders(binance)
-# for o in orders:
-#     order = get_order(binance, binance_id=o.binance_id)
-#     print(order)
-
-
 # simulator = OrderSimulator(wallet)
 
 # bot = LadderBot(wallet, simulator)
