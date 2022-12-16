@@ -51,11 +51,16 @@ while True:
     sell_order = get_order(binance, client_id=SELL_ORDER_ID)
     wallet.update_balances(binance)
     last_price = get_last_price()
-    logger.info(f'{last_price} - {wallet}')
+    
+    log_str = f'{last_price} - {wallet}'
 
     if buy_order.is_active() or sell_order.is_active():
+        order = buy_order if buy_order.is_active() else sell_order
+        logger.info(f'{log_str} - waiting for {order.side} {order.qty.normalize()} @ {to_decimal(order.price, 2)}')
         time.sleep(5)
         continue
+
+    logger.info(f'{log_str}')
 
     if wallet.get(Coin.USDT) > Decimal(1):
         buy_price = min(sell_order.price * Decimal(1 - INCR_DOWN), last_price)
