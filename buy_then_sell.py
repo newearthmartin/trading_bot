@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 max_buy = None
 min_sell = None
-INCR = 0.01
-
+INCR_UP = 0.01
+INCR_DOWN = 0.01
 
 BUY_ORDER_ID = "buy_order_id"
 SELL_ORDER_ID = "sell_order_id"
@@ -56,14 +56,14 @@ while True:
         continue
 
     if wallet.get(Coin.USDT) > Decimal(1):
-        buy_price = min(sell_order.price * Decimal(1 - INCR), last_price)
+        buy_price = min(sell_order.price * Decimal(1 - INCR_DOWN), last_price)
         if max_buy and buy_price > max_buy:
             buy_price = max_buy
             logger.info(f'Using max_buy - {max_buy}')
         max_buy = None
         place_buy(buy_price)
     elif wallet.get(Coin.BTC) > Decimal(0.00001):
-        sell_price = max(buy_order.price * Decimal(1 + INCR), last_price)
+        sell_price = max(buy_order.price * Decimal(1 + INCR_UP), last_price)
         if min_sell and sell_price < min_sell:
             sell_price = min_sell
             logger.info(f'Using min_sell - {min_sell}')
