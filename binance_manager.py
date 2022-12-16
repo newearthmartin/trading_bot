@@ -9,6 +9,9 @@ from marto_python.exceptions import log_exceptions
 logger = logging.getLogger(__name__)
 
 
+BTCUSDT = 'BTCUSDT'
+
+
 class BinanceManager:
     """
     Manages the Binance API and listens to trades. Has 3 types of listeners:
@@ -27,7 +30,7 @@ class BinanceManager:
 
     def start(self):
         self.socket_manager = BinanceSocketManager(self.client)
-        self.socket_manager.start_aggtrade_socket('BTCUSDT', self.process_message)
+        self.socket_manager.start_aggtrade_socket(BTCUSDT, self.process_message)
         self.socket_manager.start()
         print('Binance manager started...')
 
@@ -60,3 +63,8 @@ class BinanceManager:
         if old_second and old_second_trades:
             for listener in self.second_listeners:
                 listener(old_second, old_second_trades)
+
+
+def get_active_orders(binance):
+    orders = binance.client.get_all_orders(symbol=BTCUSDT, limit=10)
+    return [order for order in orders if order['status'] in ['NEW', 'PARTIALLY_FILLED']]
