@@ -33,7 +33,7 @@ class LadderBot(BaseBot):
             BTC_balance = self.wallet.get(Coin.BTC)
             if not up_down and BTC_balance > 0:
                 fee_multiplier = 1 - BINANCE_FEE * 2
-                order = Order(False, last_price * fee_multiplier, BTC_balance, order_type=SELL_THEN_BUY)
+                order = Order(Order.SELL, last_price * fee_multiplier, BTC_balance, order_type=SELL_THEN_BUY)
                 self.order_simulator.place(order)
 
     @staticmethod
@@ -55,5 +55,5 @@ class LadderBot(BaseBot):
             fee_multiplier = 1 - BINANCE_FEE * 2 - 0.002
             price = order.price_fulfilled * fee_multiplier
             qty = self.wallet.get(Coin.USDT) / price
-            order = Order(True, price, qty, order_type=JUST_DO_IT)
+            order = Order(Order.BUY, price, qty, order_type=JUST_DO_IT)
             self.order_simulator.place(order)
