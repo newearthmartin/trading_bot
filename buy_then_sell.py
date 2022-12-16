@@ -3,6 +3,7 @@
 import django
 django.setup()
 
+import time
 import logging
 from decimal import Decimal
 from binance_manager import BinanceManager, place_order, get_order, BTCUSDT
@@ -53,6 +54,7 @@ while True:
     logger.info(f'{last_price} - {wallet}')
 
     if buy_order.is_active() or sell_order.is_active():
+        time.sleep(5)
         continue
 
     if wallet.get(Coin.USDT) > Decimal(1):
