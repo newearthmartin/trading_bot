@@ -5,6 +5,7 @@ django.setup()
 
 import time
 import logging
+import requests
 from decimal import Decimal
 from binance_manager import BinanceManager, place_order, get_order, BTCUSDT
 from order_manager import BinanceOrderManager
@@ -47,34 +48,39 @@ def get_last_price():
 
 
 while True:
-    buy_order = get_order(binance, client_id=BUY_ORDER_ID)
-    sell_order = get_order(binance, client_id=SELL_ORDER_ID)
-    wallet.update_balances(binance)
-    last_price = get_last_price()
-    
-    log_str = f'{last_price} - {wallet}'
+    try:
+        buy_order = get_order(binance, client_id=BUY_ORDER_ID)
+        sell_order = get_order(binance, client_id=SELL_ORDER_ID)
+        wallet.update_balances(binance)
+        last_price = get_last_price()
 
-    if buy_order.is_active() or sell_order.is_active():
-        order = buy_order if buy_order.is_active() else sell_order
-        logger.info(f'{log_str} - waiting for {order.side} {order.qty.normalize()} @ {to_decimal(order.price, 2)}')
-        time.sleep(5)
-        continue
+        log_str = f'{last_price} - {wallet}'
 
-    logger.info(f'{log_str}')
+        if buy_order.is_active() or sell_order.is_active():
+            order = buy_order if buy_order.is_active() else sell_order
+            logger.info(f'{log_str} - waiting for {order.side} {order.qty.normalize()} @ {to_decimal(order.price, 2)}')
+            time.sleep(5)
+            continue
 
-    if wallet.get(Coin.USDT) > Decimal(1):
-        buy_price = min(sell_order.price * Decimal(1 - INCR_DOWN), last_price)
-        if max_buy and buy_price > max_buy:
-            buy_price = max_buy
-            logger.info(f'Using max_buy - {max_buy}')
-        max_buy = None
-        place_buy(buy_price)
-    elif wallet.get(Coin.BTC) > Decimal(0.00001):
-        sell_price = max(buy_order.price * Decimal(1 + INCR_UP), last_price)
-        if min_sell and sell_price < min_sell:
-            sell_price = min_sell
-            logger.info(f'Using min_sell - {min_sell}')
-        min_sell = None
-        place_sell(sell_price)
-    else:
-        logger.error(f'Ni orders, ni balance - {wallet}')
+        logger.info(f'{log_str}')
+
+        if wallet.get(Coin.USDT) > Decimal(1):
+            buy_price = min(sell_order.price * Decimal(1 - INCR_DOWN), last_price)
+            if max_buy and buy_price > max_buy:
+                buy_price = max_buy
+                logger.info(f'Using max_buy - {max_buy}')
+            max_buy = None
+            place_buy(buy_price)
+        elif wallet.get(Coin.BTC) > Decimal(0.00001):
+            sell_price = max(buy_order.price * Decimal(1 + INCR_UP), last_price)
+            if min_sell and sell_price < min_sell:
+                sell_price = min_sell
+                logger.info(f'Using min_sell - {min_sell}')
+            min_sell = None
+            place_sell(sell_price)
+        else:
+            logger.error(f'Ni orders, ni balance - {wallet}')
+    except requests.exceptions.RequestException as e:
+        logger.error(e)
+        logger.info('Sleeping for 10 seconds')
+        time.sleep(10)

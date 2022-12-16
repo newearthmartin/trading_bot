@@ -25,6 +25,7 @@ class BinanceManager:
         self.socket_manager = None
         self.current_second = None
         self.current_second_trades = []
+        logger.info('Setting up Binance client')
         self.client = Client(settings.BINANCE_API_KEY, settings.BINANCE_SECRET_KEY)
         self.msg_listeners = [msg_listener] if msg_listener else []
         self.trade_listeners = [trade_listener] if trade_listener else []
