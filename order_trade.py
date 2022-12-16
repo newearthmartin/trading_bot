@@ -27,7 +27,7 @@ class Order:
         if self.binance_id:
             order_str = f'binance {self.binance_id} - {order_str}'
         if self.client_id:
-            order_str = f'client {self.client_id} - {order_str}'
+            order_str = f'{self.client_id} - {order_str}'
         return f'({order_str})'
 
     @staticmethod

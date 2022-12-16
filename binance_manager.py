@@ -92,13 +92,12 @@ def place_order(binance, order, test=False):
     price = str(to_decimal(order.price, 2))
     qty = str(to_decimal(order.qty, 5))
 
-    logger.info(f'placing order {order.client_id} - {order.side} - {qty} @ {price}')
+    logger.info(f'placing order - ({order.client_id} - {order.side} - {qty} @ {price})')
     create_fn = binance.client.create_order if not test else binance.client.create_test_order
     create_fn(
         symbol=BTCUSDT, side=order.side, type=ORDER_TYPE_LIMIT, timeInForce=TIME_IN_FORCE_GTC,
         newClientOrderId=order.client_id, quantity=qty, price=price)
 
-    logger.info('placed order - searching for order')
     placed_order = get_order(binance, client_id=order.client_id)
     logger.info(f'placed order - {placed_order}')
     return placed_order

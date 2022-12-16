@@ -15,23 +15,23 @@ from marto_python.strings import to_decimal
 from order_trade import Order
 
 binance = BinanceManager()
-order_manager = BinanceOrderManager(binance, Wallet())
-wallet = order_manager.wallet
-wallet.update_balances(binance)
+# order_manager = BinanceOrderManager(binance, Wallet())
+# wallet = order_manager.wallet
+# wallet.update_balances(binance)
 
 # usdt_balance = wallet.get(Coin.USDT)
 # price = Decimal(17389)
 # order = Order(Order.BUY, price, (usdt_balance / price) * BINANCE_FEE_MULTIPLIER, client_id="buy_order_id")
 # placed_order = place_order(binance, order)
 
-placed_order = get_order(binance, client_id="buy_order_id")
-
-if placed_order.status == 'FILLED':
-    print('buy order filled - selling')
-    price = placed_order.price * Decimal(1.003)
-    btc_balance = wallet.get(Coin.BTC)
-    order = Order(Order.SELL, price, btc_balance, client_id="sell_order_id")
-    placed_order = place_order(binance, order, test=True)
+# placed_order = get_order(binance, client_id="buy_order_id")
+#
+# if placed_order.status == 'FILLED':
+#     print('buy order filled - selling')
+#     price = placed_order.price * Decimal(1.001)
+#     btc_balance = wallet.get(Coin.BTC)
+#     order = Order(Order.SELL, price, btc_balance, client_id="sell_order_id")
+#     placed_order = place_order(binance, order)
 
 # orders = get_active_orders(binance)
 # for o in orders:
@@ -49,3 +49,6 @@ if placed_order.status == 'FILLED':
 # bot = BuySellBot(wallet, simulator, Decimal(18000))
 # binance.trade_listeners += [bot.process_trade, simulator.process_trade]
 # binance.start()
+
+last_trade = binance.client.get_recent_trades(symbol=BTCUSDT, limit=1)[0]
+last_price = to_decimal(last_trade['price'], 2)

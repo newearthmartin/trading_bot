@@ -35,4 +35,4 @@ class Wallet:
         for coin in Coin:
             data = binance_manager.client.get_asset_balance(asset=coin.value)
             self.set(coin, Decimal(data['free']))
-        logger.info(f'Updated balances - {self}')
+        # logger.info(f'Updated balances - {self}')
